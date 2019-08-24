@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="d6af08a6-9eb4-49ea-b34e-e73f36dd29ee" name="RPi" url="http://192.168.0.81">
+        <fileTransfer host="192.168.0.81" port="50843" privateKey="$USER_HOME$/.ssh/id_rsa" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="50843" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
