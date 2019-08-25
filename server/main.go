@@ -36,7 +36,6 @@ func main() {
 	go updateParams(&params)
 	go sendAttitude(&roll, &pitch, &yaw)
 
-	// params.updateParams()
 	st := time.Now()
 	i := 1
 
@@ -57,23 +56,3 @@ func main() {
 		i++
 	}
 }
-
-/*
-func float64ToString(f []float64) []string {
-	s := make([]string, len(f))
-	for n := range f {
-		s[n] = strconv.FormatFloat(f[n], 'f', 8, 64)
-	}
-	return s
-}
-*/
-
-/*
-func radianToDegreeSlice(rad []float64) (float64, float64, float64) {
-	deg := make([]float64, len(rad))
-	for n := range rad {
-		deg[n] = rad[n] * 180 / math.Pi
-	}
-	return deg[0], deg[1], deg[2]
-}
-*/
