@@ -53,10 +53,13 @@ func updateParams(p *Parameters, stopCh chan struct{}, wg *sync.WaitGroup) {
 			// log.Println("(goroutine updateParams) runnning")
 			time.Sleep(5 * time.Millisecond)
 			// TODO ここで止まるからcaseの監視ができない タイムアウトを使う??
-			continue
+			if err := conn.SetReadDeadline(time.Now().Add(time.Second)); err != nil {
+				log.Println(err)
+			}
 			length, remoteAddr, err := conn.ReadFrom(buffer)
 			if err != nil {
-				log.Fatalln("Connect ERROR : ", err)
+				log.Println("Connect ERROR : ", err)
+				continue
 			}
 			data = string(buffer[:length])
 			log.Printf("\nReceived from %v: %v\n", remoteAddr, data)
