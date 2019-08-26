@@ -22,7 +22,8 @@ func float64ToByte(f float64) []byte {
 func sendAttitude(roll, pitch, yaw *float64, stopCh chan struct{}, wg *sync.WaitGroup) {
 
 	//Done
-	defer func() {wg.Done()}()
+	defer wg.Done()
+	// defer func() {wg.Done()}()
 	defer log.Println("done sendAttitude")
 
 	conn, err := net.Dial("udp", "127.0.0.1:60002")
@@ -40,7 +41,7 @@ func sendAttitude(roll, pitch, yaw *float64, stopCh chan struct{}, wg *sync.Wait
 			log.Println("(goroutine sendAttitude) stop request received")
 			return
 		default:
-			log.Println("(goroutine sendAttitude) runnning")
+			// log.Println("(goroutine sendAttitude) runnning")
 			time.Sleep(10 * time.Millisecond)
 			rollB := float64ToByte(*roll)
 			pitchB := float64ToByte(*pitch)
