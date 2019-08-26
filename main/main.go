@@ -34,20 +34,28 @@ func main() {
 	// declare a channel to receive signal
 	sigCh := make(chan os.Signal, 1)
 	// receive
-	signal.Notify(sigCh, trapSignals...)
+	// signal.Notify(sigCh, trapSignals...)
+	signal.Notify(sigCh, os.Interrupt)
+	log.Println(trapSignals)
 	//pass the channel to the main processing function
 	ctx, cancel := context.WithCancel(context.Background())
+
+	// ##################################
+	// signal handler
+	stopCh := make(chan struct{})
+	wg := sync.WaitGroup{}
+	// ##################################
+
 	// wait a signal in another gotoutine
 	go func() {
 		// block until func receive a signal
 		sig := <-sigCh
+		close(stopCh)
 		log.Println("Got signal", sig)
-		cancel()
+		defer cancel()
+		return
 	}()
 
-	// signal handler
-	stopCh := make(chan struct{})
-	wg := sync.WaitGroup{}
 
 	q := quaternion.Quaternion{W: 1, X: 0, Y: 0, Z: 0}
 	roll, pitch, yaw := q.Euler()
@@ -73,27 +81,27 @@ func main() {
 	st := time.Now()
 	i := 1
 
-	for {
-		select {
-		case <-ctx.Done():
-			close(stopCh)
-			break
-		default:
-			params.dt = time.Since(st).Seconds()
-			// update attitude
-			params.updateAttitude(&q)
-			st = time.Now()
-			roll, pitch, yaw = q.Euler()
+	MainFor:
+		for {
+			select {
+			case <-ctx.Done():
+				break MainFor
+			default:
+				params.dt = time.Since(st).Seconds()
+				// update attitude
+				params.updateAttitude(&q)
+				st = time.Now()
+				roll, pitch, yaw = q.Euler()
 
-			roll = radianToDegree(roll)
-			pitch = radianToDegree(pitch)
-			yaw = radianToDegree(yaw)
+				roll = radianToDegree(roll)
+				pitch = radianToDegree(pitch)
+				yaw = radianToDegree(yaw)
 
-			log.Println(i, roll, pitch, yaw)
+				log.Println(i, roll, pitch, yaw)
 
-			time.Sleep(10 * time.Millisecond)
-			i++
+				time.Sleep(10 * time.Millisecond)
+				i++
+			}
 		}
-	}
 	wg.Wait()
 }

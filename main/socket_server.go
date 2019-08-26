@@ -31,7 +31,8 @@ func splitDataToFloat64(s, sep string) (float64, float64, float64, float64, floa
 
 func updateParams(p *Parameters, stopCh chan struct{}, wg *sync.WaitGroup) {
 	//Done
-	defer func() { wg.Done() }()
+	defer wg.Done()
+	// defer func() { wg.Done() }()
 	defer log.Println("done updateParams")
 
 	conn, err := net.ListenPacket("udp", "127.0.0.1:62000")
@@ -49,9 +50,10 @@ func updateParams(p *Parameters, stopCh chan struct{}, wg *sync.WaitGroup) {
 			log.Println("(goroutine updateParams) stop request received")
 			return
 		default:
-			log.Println("(goroutine updateParams) runnning")
+			// log.Println("(goroutine updateParams) runnning")
 			time.Sleep(5 * time.Millisecond)
 			// TODO ここで止まるからcaseの監視ができない タイムアウトを使う??
+			continue
 			length, remoteAddr, err := conn.ReadFrom(buffer)
 			if err != nil {
 				log.Fatalln("Connect ERROR : ", err)
