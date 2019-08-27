@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"github.com/google/periph/experimental/devices/mpu9250"

@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"github.com/westphae/quaternion"
@@ -99,7 +99,6 @@ func (p Parameters) updateAttitude(q *quaternion.Quaternion) {
 		qez /= norm
 
 		// compute omega_b
-		// ジャイロのバイアスエラーを取り除く場合、ここに処理を記述
 
 		// compute q_dot_omega
 		a1 = -q.X*p.wx - q.Y*p.wy - q.Z*p.wz
@@ -131,4 +130,3 @@ func (p Parameters) updateAttitude(q *quaternion.Quaternion) {
 		q.Z /= norm
 	}
 }
-
