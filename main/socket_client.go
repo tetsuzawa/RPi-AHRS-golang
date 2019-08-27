@@ -5,10 +5,23 @@ import (
 	"encoding/binary"
 	"fmt"
 	"log"
+	"math"
 	"net"
 	"sync"
 	"time"
 )
+
+func float64ToBytes(f float64) []byte {
+	bits := math.Float64bits(f)
+	b := make([]byte, 8)
+	binary.LittleEndian.PutUint64(b, bits)
+	return b
+}
+func bytesToFloat64(b []byte) float64 {
+	bits := binary.LittleEndian.Uint64(b)
+	f := math.Float64frombits(bits)
+	return f
+}
 
 func float64ToByte(f float64) []byte {
 	var buf bytes.Buffer
@@ -40,13 +53,14 @@ func sendAttitude(roll, pitch, yaw *float64, stopCh chan struct{}, wg *sync.Wait
 			log.Println("(goroutine sendAttitude) stop request received")
 			return
 		default:
-			rollB := float64ToByte(*roll)
-			pitchB := float64ToByte(*pitch)
-			yawB := float64ToByte(*yaw)
+			rollB := float64ToBytes(*roll)
+			pitchB := float64ToBytes(*pitch)
+			yawB := float64ToBytes(*yaw)
 			msg = []byte{}
 			msg = append(msg, rollB...)
 			msg = append(msg, pitchB...)
 			msg = append(msg, yawB...)
+			// log.Println(bytesToFloat64(msg[:8]))
 			if err := conn.SetWriteDeadline(time.Now().Add(time.Second)); err != nil {
 				log.Println(err)
 			}
