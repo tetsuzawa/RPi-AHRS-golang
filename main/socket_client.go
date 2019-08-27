@@ -12,8 +12,7 @@ import (
 
 func float64ToByte(f float64) []byte {
 	var buf bytes.Buffer
-	err := binary.Write(&buf, binary.BigEndian, f)
-	if err != nil {
+	if err := binary.Write(&buf, binary.BigEndian, f); err != nil {
 		fmt.Println("binary.Write failed:", err)
 	}
 	return buf.Bytes()
@@ -23,7 +22,6 @@ func sendAttitude(roll, pitch, yaw *float64, stopCh chan struct{}, wg *sync.Wait
 
 	//Done
 	defer wg.Done()
-	// defer func() {wg.Done()}()
 	defer log.Println("done sendAttitude")
 
 	conn, err := net.Dial("udp", "127.0.0.1:60002")
@@ -35,21 +33,27 @@ func sendAttitude(roll, pitch, yaw *float64, stopCh chan struct{}, wg *sync.Wait
 	var msg = make([]byte, 0, 24)
 	// メッセージを送信する
 	for {
+		time.Sleep(10 * time.Millisecond)
 		// Stop
 		select {
 		case <- stopCh:
 			log.Println("(goroutine sendAttitude) stop request received")
 			return
 		default:
-			// log.Println("(goroutine sendAttitude) runnning")
-			time.Sleep(10 * time.Millisecond)
 			rollB := float64ToByte(*roll)
 			pitchB := float64ToByte(*pitch)
 			yawB := float64ToByte(*yaw)
+			msg = []byte{}
 			msg = append(msg, rollB...)
 			msg = append(msg, pitchB...)
 			msg = append(msg, yawB...)
-			conn.Write(msg)
+			if err := conn.SetWriteDeadline(time.Now().Add(time.Second)); err != nil {
+				log.Println(err)
+			}
+			if _, err := conn.Write(msg); err != nil {
+				log.Println(err)
+				continue
+			}
 		}
 	}
 }
