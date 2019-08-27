@@ -1,11 +1,10 @@
-package server
+package main
 
 import (
 	"github.com/westphae/quaternion"
 	"math"
 )
 
-//func filterUpdate(wx, wy, wz, ax, ay, az, mx, my, mz float64, qw, qx, qy, qz *float64, dt float64) {
 func (p Parameters) updateAttitude(q *quaternion.Quaternion) {
 	var (
 		norm,               // norm to normalise
@@ -100,7 +99,6 @@ func (p Parameters) updateAttitude(q *quaternion.Quaternion) {
 		qez /= norm
 
 		// compute omega_b
-		// ジャイロのバイアスエラーを取り除く場合、ここに処理を記述
 
 		// compute q_dot_omega
 		a1 = -q.X*p.wx - q.Y*p.wy - q.Z*p.wz
@@ -132,23 +130,3 @@ func (p Parameters) updateAttitude(q *quaternion.Quaternion) {
 		q.Z /= norm
 	}
 }
-
-/*
-func main_madgewick() {
-	flag.Parse()
-	args := flag.Args()
-	fargs := stringToFloat64(args)
-	// fmt.Printf("%T %v %f\n", fargs[1], fargs[1], fargs[1])
-	wx, wy, wz := fargs[0], fargs[1], fargs[2]
-	ax, ay, az := fargs[3], fargs[4], fargs[5]
-	mx, my, mz := fargs[6], fargs[7], fargs[8]
-	qw, qx, qy, qz := fargs[9], fargs[10], fargs[11], fargs[12]
-	dt := fargs[13]
-
-	for i := 0; i < 1000; i++ {
-		filterUpdate(wx, wy, wz, ax, ay, az, p.mx, my, mz, &qw, &qx, &qy, &qz, dt)
-	}
-
-	fmt.Println(qw, qx, qy, qz)
-}
-*/
