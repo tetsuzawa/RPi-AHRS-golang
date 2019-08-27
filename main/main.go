@@ -56,7 +56,6 @@ func main() {
 		return
 	}()
 
-
 	q := quaternion.Quaternion{W: 1, X: 0, Y: 0, Z: 0}
 	roll, pitch, yaw := q.Euler()
 	var params = Parameters{
@@ -74,34 +73,34 @@ func main() {
 	}
 	// 通信読込 + 接続相手アドレス情報が受取
 	wg.Add(1)
-	go updateParams(&params, stopCh, &wg)
+	go updateParams(&params, sigCh, stopCh, &wg)
 	wg.Add(1)
 	go sendAttitude(&roll, &pitch, &yaw, stopCh, &wg)
 
 	st := time.Now()
 	i := 1
 
-	MainFor:
-		for {
-			select {
-			case <-ctx.Done():
-				break MainFor
-			default:
-				params.dt = time.Since(st).Seconds()
-				// update attitude
-				params.updateAttitude(&q)
-				st = time.Now()
-				roll, pitch, yaw = q.Euler()
+MainFor:
+	for {
+		select {
+		case <-ctx.Done():
+			break MainFor
+		default:
+			params.dt = time.Since(st).Seconds()
+			// update attitude
+			params.updateAttitude(&q)
+			st = time.Now()
+			roll, pitch, yaw = q.Euler()
 
-				roll = radianToDegree(roll)
-				pitch = radianToDegree(pitch)
-				yaw = radianToDegree(yaw)
+			roll = radianToDegree(roll)
+			pitch = radianToDegree(pitch)
+			yaw = radianToDegree(yaw)
 
-				log.Println(i, roll, pitch, yaw)
+			log.Println(i, roll, pitch, yaw)
 
-				time.Sleep(10 * time.Millisecond)
-				i++
-			}
+			time.Sleep(10 * time.Millisecond)
+			i++
 		}
+	}
 	wg.Wait()
 }
