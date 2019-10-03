@@ -38,7 +38,7 @@ func updateParams(p *Parameters, sigCh chan os.Signal, stopCh chan struct{}, wg 
 	// conn, err := net.ListenPacket("udp", "127.0.0.1:62000")
 	conn, err := net.ListenPacket("udp", "169.254.180.33:50009")
 	if err != nil {
-		println("ERROR: ", err)
+		log.Fatalf("ERROR: %v", err)
 	}
 	defer conn.Close()
 	buffer := make([]byte, 1024)
