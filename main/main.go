@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"github.com/westphae/quaternion"
 	"log"
 	"math"
@@ -22,6 +23,11 @@ func radianToDegree(rad float64) (deg float64) {
 }
 
 func main() {
+	//read ip
+	flag.Parse()
+	args := flag.Args()
+	clientIp := args[0]
+
 	defer log.Println("done main")
 
 	// declare signals to treat
@@ -73,9 +79,9 @@ func main() {
 	}
 	// 通信読込 + 接続相手アドレス情報が受取
 	wg.Add(1)
-	go updateParams(&params, sigCh, stopCh, &wg)
-	wg.Add(1)
-	go sendAttitude(&roll, &pitch, &yaw, stopCh, &wg)
+	go updateParams(&params, clientIp, sigCh, stopCh, &wg)
+	//wg.Add(1)
+	//go sendAttitude(&roll, &pitch, &yaw, stopCh, &wg)
 
 	st := time.Now()
 	i := 1
