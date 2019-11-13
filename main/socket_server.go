@@ -30,17 +30,18 @@ func splitDataToFloat64(s, sep string) (float64, float64, float64, float64, floa
 		f[3], f[4], f[5], f[6], f[7], f[8], nil
 }
 
-func updateParams(p *Parameters, clientIp string, sigCh chan os.Signal, stopCh chan struct{}, wg *sync.WaitGroup) {
+func updateParams(p *Parameters, serverIp string, sigCh chan os.Signal, stopCh chan struct{}, wg *sync.WaitGroup) {
 	//Done
 	defer wg.Done()
 	// defer func() { wg.Done() }()
 	defer log.Println("done updateParams")
 
-	address := clientIp + ":50020"
-
-	conn, err := net.ListenPacket("udp", address)
+	// conn, err := net.ListenPacket("udp", "127.0.0.1:62000")
+	serverAddr := serverIp + ":50020"
+	fmt.Printf("udp server is runnning at %s\n", serverAddr)
+	conn, err := net.ListenPacket("udp", serverAddr)
 	if err != nil {
-		fmt.Println("ERROR: ", err)
+		log.Fatalf("ERROR: %v", err)
 	}
 	defer conn.Close()
 	buffer := make([]byte, 1024)
