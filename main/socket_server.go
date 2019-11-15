@@ -34,7 +34,7 @@ func updateParams(p *Parameters, serverIp string, sigCh chan os.Signal, stopCh c
 	//Done
 	defer wg.Done()
 	// defer func() { wg.Done() }()
-	defer log.Println("done updateParams")
+	defer fmt.Println("done updateParams")
 
 	// conn, err := net.ListenPacket("udp", "127.0.0.1:62000")
 	serverAddr := serverIp + ":50020"
@@ -51,7 +51,7 @@ func updateParams(p *Parameters, serverIp string, sigCh chan os.Signal, stopCh c
 		// Stop
 		select {
 		case <-stopCh:
-			log.Println("(goroutine updateParams) stop request received")
+			fmt.Println("(goroutine updateParams) stop request received")
 			return
 		default:
 			time.Sleep(5 * time.Millisecond)

@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"flag"
+	"fmt"
 	"github.com/westphae/quaternion"
 	"log"
 	"math"
@@ -24,11 +24,18 @@ func radianToDegree(rad float64) (deg float64) {
 
 func main() {
 	//read ip
-	flag.Parse()
-	args := flag.Args()
-	serverIp := args[0]
+	args := os.Args
+	if len(args) > 2 {
+		fmt.Printf("too many arguments. usage: %v 172.24.176.10", args[0])
+		os.Exit(1)
+	} else if len(args) < 2 {
+		fmt.Printf("too many arguments. usage: %v 172.24.176.10", args[0])
+		os.Exit(1)
+	}
+	serverIp := args[1]
 
-	defer log.Println("done main")
+	defer fmt.Printf("\nend!!\n")
+	defer fmt.Println("done main")
 
 	// declare signals to treat
 	trapSignals := []os.Signal{
@@ -57,7 +64,7 @@ func main() {
 		// block until func receive a signal
 		sig := <-sigCh
 		close(stopCh)
-		log.Println("Got signal", sig)
+		fmt.Println("Got signal", sig)
 		defer cancel()
 		return
 	}()
@@ -102,7 +109,8 @@ MainFor:
 			pitch = radianToDegree(pitch)
 			yaw = radianToDegree(yaw)
 
-			log.Println(i, roll, pitch, yaw)
+			//log.Printf("%d %3.0f %3.0f %3.0f \r", i, roll, pitch, yaw)
+			fmt.Printf("%d roll: %+3.0f, pitch: %+3.0f, yaw: %+3.0f \r", i, roll, pitch, yaw)
 
 			time.Sleep(10 * time.Millisecond)
 			i++
