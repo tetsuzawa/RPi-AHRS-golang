@@ -26,7 +26,7 @@ func main() {
 	//read ip
 	args := os.Args
 	if len(args) > 2 {
-		fmt.Printf("too many arguments. usage: %v 172.24.176.10", args[0])
+		fmt.Printf("too many arguments. usage: %v <your ip>\nfor example %v 172.24.176.10", args[0])
 		os.Exit(1)
 	} else if len(args) < 2 {
 		fmt.Printf("too many arguments. usage: %v 172.24.176.10", args[0])
