@@ -67,7 +67,7 @@ func main() {
 	offsetCh := make(chan []float64)
 	// *******************************
 	wg.Add(1)
-	go inputHandler(ctx, offsetCh, &wg)
+	go offsetHandler(ctx, offsetCh, &wg)
 
 	var st = time.Now()
 	var i = 1

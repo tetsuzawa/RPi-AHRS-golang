@@ -8,8 +8,8 @@ import (
 	"sync"
 )
 
-func inputHandler(ctx context.Context, offsetCh chan []float64, wg *sync.WaitGroup) {
-	//func inputHandler(stopCh chan struct{}, offsetCh chan []float64, wg *sync.WaitGroup) {
+func offsetHandler(ctx context.Context, offsetCh chan []float64, wg *sync.WaitGroup) {
+	//func offsetHandler(stopCh chan struct{}, offsetCh chan []float64, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	var offset []float64
@@ -20,7 +20,7 @@ func inputHandler(ctx context.Context, offsetCh chan []float64, wg *sync.WaitGro
 		select {
 		case <-ctx.Done():
 			//case <-stopCh:
-			fmt.Println("done inputHandler")
+			fmt.Println("done offsetHandler")
 			return
 
 		default:
