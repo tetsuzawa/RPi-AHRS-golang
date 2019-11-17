@@ -1,15 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"fmt"
-	"github.com/westphae/quaternion"
-	"math"
 	"os"
 	"os/signal"
 	"sync"
 	"time"
+
+	"github.com/westphae/quaternion"
 )
 
 type Parameters struct {
@@ -17,11 +16,6 @@ type Parameters struct {
 }
 
 var roll, pitch, yaw float64
-
-func radianToDegree(rad float64) (deg float64) {
-	deg = rad * 180 / math.Pi
-	return
-}
 
 func main() {
 	//read ip
@@ -75,7 +69,6 @@ func main() {
 	wg.Add(1)
 	go inputHandler(ctx, offsetCh, &wg)
 
-
 	var st = time.Now()
 	var i = 1
 	var rollOffset, pitchOffset, yawOffset float64
@@ -115,45 +108,4 @@ MainFor:
 	_, err := fmt.Fprintf(os.Stdout, "\n***** Press enter to terminate *****\n")
 	check(err)
 	wg.Wait()
-}
-
-func inputHandler(ctx context.Context, offsetCh chan []float64, wg *sync.WaitGroup) {
-	//func inputHandler(stopCh chan struct{}, offsetCh chan []float64, wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	var offset []float64
-
-	sc := bufio.NewScanner(os.Stdin)
-	for {
-		//time.Sleep(1 * time.Second)
-		select {
-		case <-ctx.Done():
-			//case <-stopCh:
-			fmt.Println("done inputHandler")
-			return
-
-		default:
-			sc.Scan()
-			s := sc.Text()
-			switch s {
-			case "n":
-				fmt.Printf("\nnew offset have been set with values roll: %+3.0f, pitch: %+3.0f, yaw: %+3.0f\n", roll, pitch, yaw)
-				offset = []float64{roll, pitch, yaw}
-				offsetCh <- offset
-			case "s":
-				fmt.Printf("\noffset have been set with values roll: %+3.0f, pitch: %+3.0f, yaw: %+3.0f\n", roll, pitch, yaw)
-				offsetCh <- offset
-			case "c":
-				fmt.Printf("\noffset have been canceled\n")
-				offsetCh <- []float64{0, 0, 0}
-			default:
-			}
-		}
-	}
-}
-
-func check(err error) {
-	if err != nil {
-		panic(err)
-	}
 }

@@ -1,25 +1,11 @@
 package main
 
 import (
-	"encoding/binary"
 	"log"
-	"math"
 	"net"
 	"sync"
 	"time"
 )
-
-func float64ToBytes(f float64) []byte {
-	bits := math.Float64bits(f)
-	b := make([]byte, 8)
-	binary.LittleEndian.PutUint64(b, bits)
-	return b
-}
-func bytesToFloat64(b []byte) float64 {
-	bits := binary.LittleEndian.Uint64(b)
-	f := math.Float64frombits(bits)
-	return f
-}
 
 func sendAttitude(roll, pitch, yaw *float64, stopCh chan struct{}, wg *sync.WaitGroup) {
 
