@@ -14,3 +14,6 @@
 # Jetbrains
 *.idea
 *.idea/*
+
+# build
+bin/

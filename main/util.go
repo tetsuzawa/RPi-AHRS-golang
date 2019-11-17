@@ -5,6 +5,8 @@ import (
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 func check(err error) {
