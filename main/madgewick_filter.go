@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/westphae/quaternion"
 	"math"
+
+	"github.com/westphae/quaternion"
 )
 
 func (p Parameters) updateAttitude(q *quaternion.Quaternion) {

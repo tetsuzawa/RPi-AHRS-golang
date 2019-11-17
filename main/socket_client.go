@@ -1,22 +1,11 @@
 package main
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
 	"log"
 	"net"
 	"sync"
 	"time"
 )
-
-func float64ToByte(f float64) []byte {
-	var buf bytes.Buffer
-	if err := binary.Write(&buf, binary.BigEndian, f); err != nil {
-		fmt.Println("binary.Write failed:", err)
-	}
-	return buf.Bytes()
-}
 
 func sendAttitude(roll, pitch, yaw *float64, stopCh chan struct{}, wg *sync.WaitGroup) {
 
@@ -36,17 +25,18 @@ func sendAttitude(roll, pitch, yaw *float64, stopCh chan struct{}, wg *sync.Wait
 		time.Sleep(10 * time.Millisecond)
 		// Stop
 		select {
-		case <- stopCh:
+		case <-stopCh:
 			log.Println("(goroutine sendAttitude) stop request received")
 			return
 		default:
-			rollB := float64ToByte(*roll)
-			pitchB := float64ToByte(*pitch)
-			yawB := float64ToByte(*yaw)
+			rollB := float64ToBytes(*roll)
+			pitchB := float64ToBytes(*pitch)
+			yawB := float64ToBytes(*yaw)
 			msg = []byte{}
 			msg = append(msg, rollB...)
 			msg = append(msg, pitchB...)
 			msg = append(msg, yawB...)
+			// log.Println(bytesToFloat64(msg[:8]))
 			if err := conn.SetWriteDeadline(time.Now().Add(time.Second)); err != nil {
 				log.Println(err)
 			}
