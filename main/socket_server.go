@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -30,7 +31,8 @@ func splitDataToFloat64(s, sep string) (float64, float64, float64, float64, floa
 		f[3], f[4], f[5], f[6], f[7], f[8], nil
 }
 
-func updateParams(p *Parameters, serverIp string, sigCh chan os.Signal, stopCh chan struct{}, wg *sync.WaitGroup) {
+func updateParams(ctx context.Context, p *Parameters, serverIp string, sigCh chan os.Signal, wg *sync.WaitGroup) {
+	//func updateParams(p *Parameters, serverIp string, sigCh chan os.Signal, stopCh chan struct{}, wg *sync.WaitGroup) {
 	//Done
 	defer wg.Done()
 	// defer func() { wg.Done() }()
@@ -50,7 +52,8 @@ func updateParams(p *Parameters, serverIp string, sigCh chan os.Signal, stopCh c
 	for {
 		// Stop
 		select {
-		case <-stopCh:
+		//case <-stopCh:
+		case <-ctx.Done():
 			fmt.Println("(goroutine updateParams) stop request received")
 			return
 		default:
