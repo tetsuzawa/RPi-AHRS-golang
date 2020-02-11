@@ -1,0 +1,4 @@
+github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
+github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/westphae/quaternion v0.0.0-20190804192539-eb19a71cb818 h1:mqjZgo7sYcdowZ+AKh/pTunpj6dGNA3PzVKo9+WJm3E=
+github.com/westphae/quaternion v0.0.0-20190804192539-eb19a71cb818/go.mod h1:QTAatvZIftK/dJJK1wtxV+M3VF/IW7/nRJukOT52ItQ=
